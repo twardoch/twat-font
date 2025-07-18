@@ -1,0 +1,8 @@
+75	./uv.lock
+31	./REPO_CONTENT.txt
+18	./README.md
+13	./cleanup.py
+8	./CLEANUP.txt
+7	./pyproject.toml
+5	./src/twat_video/twat_video.py
+4	./tests/test_twat_video.py

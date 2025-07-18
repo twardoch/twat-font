@@ -9,8 +9,8 @@ permissions:
   id-token: write
 
 jobs:
-  release:
-    name: Release to PyPI
+  build-and-publish:
+    name: Build and Publish to PyPI
     runs-on: ubuntu-latest
     environment:
       name: pypi
@@ -50,10 +50,113 @@ jobs:
         with:
           password: ${{ secrets.PYPI_TOKEN }}
 
+      - name: Upload Python packages to release
+        uses: actions/upload-artifact@v4
+        with:
+          name: python-packages
+          path: dist/
+
+  build-binaries:
+    name: Build Release Binaries
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        python-version: ["3.12"]
+      fail-fast: false
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+        with:
+          version: "latest"
+          python-version: ${{ matrix.python-version }}
+          enable-cache: true
+
+      - name: Install dependencies
+        run: |
+          uv pip install --system --upgrade pip
+          uv pip install --system ".[binary]"
+
+      - name: Build binary (Linux/macOS)
+        if: runner.os != 'Windows'
+        run: |
+          chmod +x scripts/build-binary.sh
+          ./scripts/build-binary.sh --onefile
+
+      - name: Build binary (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          python -m PyInstaller --onefile --name twat-video --distpath dist-binary --workpath build-binary --specpath build-binary src/twat_video/cli.py
+
+      - name: Rename binary for release
+        run: |
+          mkdir -p release-binaries
+          if [ "$RUNNER_OS" == "Linux" ]; then
+            cp dist-binary/twat-video release-binaries/twat-video-linux-x64
+          elif [ "$RUNNER_OS" == "Windows" ]; then
+            cp dist-binary/twat-video.exe release-binaries/twat-video-windows-x64.exe
+          elif [ "$RUNNER_OS" == "macOS" ]; then
+            cp dist-binary/twat-video release-binaries/twat-video-macos-x64
+          fi
+        shell: bash
+
+      - name: Upload binary artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-binary-${{ matrix.os }}
+          path: release-binaries/
+
+  create-release:
+    name: Create GitHub Release
+    needs: [build-and-publish, build-binaries]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download Python packages
+        uses: actions/download-artifact@v4
+        with:
+          name: python-packages
+          path: dist/
+
+      - name: Download binary artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: release-binary-*
+          path: binaries/
+          merge-multiple: true
+
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/*
+          files: |
+            dist/*
+            binaries/*
           generate_release_notes: true
+          body: |
+            ## Installation
+            
+            ### Python Package
+            ```bash
+            pip install twat-video
+            ```
+            
+            ### Binary Downloads
+            - **Linux**: `twat-video-linux-x64`
+            - **Windows**: `twat-video-windows-x64.exe`
+            - **macOS**: `twat-video-macos-x64`
+            
+            Make the binary executable on Unix systems:
+            ```bash
+            chmod +x twat-video-linux-x64  # or twat-video-macos-x64
+            ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
