@@ -1,14 +1,13 @@
 #!/usr/bin/env python3
 """
-twat_video
+font_organizer
 
-This module provides a basic scaffolding for a Python project.
-It includes a sample configuration class, a data processing function,
-and a main entry point. It is intended to be a starting point for
-developing more complex applications.
+Core module for font organization functionality.
+Provides font management, organization, and analysis capabilities.
 
 Created by Adam Twardoch
 """
+# this_file: src/font_organizer/font_organizer.py
 
 from __future__ import annotations
 
@@ -109,12 +108,12 @@ def process_data(
 
 def main() -> None:
     """
-    Main entry point for the twat_video application when run as a script.
+    Main entry point for the font_organizer application when run as a script.
 
     This function demonstrates example usage of the `process_data` function.
     It sets up a sample configuration and data, then calls `process_data`.
     """
-    logger.info("Starting twat_video application (version %s)...", __version__)
+    logger.info("Starting font_organizer application (version %s)...", __version__)
 
     try:
         # Example: Create a configuration object
@@ -143,9 +142,9 @@ def main() -> None:
         # Re-raise the exception after logging, or handle it as appropriate
         raise
     finally:
-        logger.info("twat_video application finished.")
+        logger.info("font_organizer application finished.")
 
 
 if __name__ == "__main__":
-    # This block executes if the script is run directly (e.g., python -m twat_video.twat_video)
+    # This block executes if the script is run directly (e.g., python -m font_organizer.font_organizer)
     main()

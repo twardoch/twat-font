@@ -11,8 +11,8 @@ BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
 # Configuration
-PROJECT_NAME="twat-video"
-BINARY_NAME="twat-video"
+PROJECT_NAME="font-organizer"
+BINARY_NAME="font-organizer"
 BUILD_DIR="build-binary"
 DIST_DIR="dist-binary"
 
@@ -115,7 +115,7 @@ log_info "Installing binary build dependencies..."
 uv pip install --upgrade ".[binary]"
 
 # Get the version for the binary
-VERSION=$(python -c "import twat_video; print(twat_video.__version__)" 2>/dev/null || echo "unknown")
+VERSION=$(python -c "import font_organizer; print(font_organizer.__version__)" 2>/dev/null || echo "unknown")
 
 case "$TOOL" in
     pyinstaller)
@@ -143,7 +143,7 @@ case "$TOOL" in
         fi
         
         # Build the binary
-        uv run pyinstaller "${PYINSTALLER_ARGS[@]}" src/twat_video/cli.py
+        uv run pyinstaller "${PYINSTALLER_ARGS[@]}" src/font_organizer/cli.py
         
         if [[ "$ONEFILE" == "true" ]]; then
             BINARY_PATH="$DIST_DIR/$BINARY_NAME"
@@ -161,7 +161,7 @@ import sys
 from cx_Freeze import setup, Executable
 
 build_exe_options = {
-    "packages": ["twat_video"],
+    "packages": ["font_organizer"],
     "include_files": [],
     "excludes": [],
     "build_exe": "$DIST_DIR",
@@ -176,7 +176,7 @@ setup(
     version="$VERSION",
     description="$PROJECT_NAME standalone binary",
     options={"build_exe": build_exe_options},
-    executables=[Executable("src/twat_video/cli.py", base=base, target_name="$BINARY_NAME")]
+    executables=[Executable("src/font_organizer/cli.py", base=base, target_name="$BINARY_NAME")]
 )
 EOF
         

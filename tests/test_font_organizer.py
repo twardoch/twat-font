@@ -1,4 +1,5 @@
-"""Test suite for the twat_video package."""
+"""Test suite for the font_organizer package."""
+# this_file: tests/test_font_organizer.py
 
 import logging
 import pytest
@@ -7,8 +8,8 @@ import os
 from unittest.mock import patch, MagicMock
 from dataclasses import FrozenInstanceError
 
-from twat_video import Config, process_data, main as twat_video_main
-from twat_video import __version__
+from font_organizer import Config, process_data, main as font_organizer_main
+from font_organizer import __version__
 
 
 def test_version_is_exposed():
@@ -61,7 +62,7 @@ def test_process_data_debug_mode(caplog):
     sample_data = ["debug_item"]
     sample_config = Config(name="debug_config")
 
-    with caplog.at_level(logging.DEBUG, logger="twat_video.twat_video"):
+    with caplog.at_level(logging.DEBUG, logger="font_organizer.font_organizer"):
         process_data(data=sample_data, config=sample_config, debug=True)
 
     assert "Debug mode enabled for process_data" in caplog.text
@@ -89,11 +90,11 @@ def test_main_runs_without_error(caplog):
     """
     try:
         # Capture logs to see if main function runs as expected
-        with caplog.at_level(logging.INFO, logger="twat_video.twat_video"):
-            twat_video_main()
-        assert "Starting twat_video application" in caplog.text
+        with caplog.at_level(logging.INFO, logger="font_organizer.font_organizer"):
+            font_organizer_main()
+        assert "Starting font_organizer application" in caplog.text
         assert "Processing completed. Result:" in caplog.text
-        assert "twat_video application finished." in caplog.text
+        assert "font_organizer application finished." in caplog.text
     except Exception as e:
         pytest.fail(f"main() function raised an unexpected exception: {e}")
 
@@ -180,7 +181,7 @@ def test_process_data_logging_levels(caplog):
 
 def test_process_data_debug_logger_reset():
     """Test that debug mode properly resets logger level."""
-    import twat_video.twat_video as module
+    import font_organizer.font_organizer as module
     original_level = module.logger.level
     
     sample_data = ["debug_test"]
@@ -192,23 +193,23 @@ def test_process_data_debug_logger_reset():
 
 def test_main_exception_handling(caplog):
     """Test main function exception handling."""
-    with patch('twat_video.twat_video.process_data') as mock_process:
+    with patch('font_organizer.font_organizer.process_data') as mock_process:
         mock_process.side_effect = ValueError("Test error")
         
         with caplog.at_level(logging.ERROR):
-            twat_video_main()
+            font_organizer_main()
         
         assert "A ValueError occurred during processing" in caplog.text
 
 
 def test_main_critical_exception_handling(caplog):
     """Test main function critical exception handling."""
-    with patch('twat_video.twat_video.process_data') as mock_process:
+    with patch('font_organizer.font_organizer.process_data') as mock_process:
         mock_process.side_effect = RuntimeError("Critical error")
         
         with caplog.at_level(logging.CRITICAL):
             with pytest.raises(RuntimeError):
-                twat_video_main()
+                font_organizer_main()
         
         assert "An unexpected critical error occurred" in caplog.text
 
@@ -223,12 +224,12 @@ def test_version_format():
 
 def test_module_imports():
     """Test that all expected symbols are properly imported."""
-    import twat_video
+    import font_organizer
     
     # Check __all__ exports
     expected_exports = ["Config", "process_data", "main", "__version__"]
     for export in expected_exports:
-        assert hasattr(twat_video, export)
+        assert hasattr(font_organizer, export)
 
 
 def test_config_repr():
@@ -259,10 +260,10 @@ def test_process_data_with_complex_config():
 
 def test_logging_configuration():
     """Test that logging is properly configured."""
-    import twat_video.twat_video as module
+    import font_organizer.font_organizer as module
     
     # Logger should be configured
-    assert module.logger.name == "twat_video.twat_video"
+    assert module.logger.name == "font_organizer.font_organizer"
     assert isinstance(module.logger, logging.Logger)
 
 

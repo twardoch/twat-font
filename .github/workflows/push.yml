@@ -1,3 +1,5 @@
+# this_file: .github/workflows/push.yml
+
 name: Build & Test
 
 on:
@@ -49,7 +51,7 @@ jobs:
           uv pip install --system .[dev] # Install project dev dependencies including type stubs if any
 
       - name: Run MyPy
-        run: mypy src/twat_video tests
+        run: mypy src/font_organizer tests
 
   test:
     name: Run Tests
@@ -83,7 +85,7 @@ jobs:
           uv pip install --system ".[test]"
 
       - name: Run tests with Pytest
-        run: uv run pytest -n auto --maxfail=1 --disable-warnings --cov-report=xml --cov-config=pyproject.toml --cov=src/twat_video --cov=tests tests/
+        run: uv run pytest -n auto --maxfail=1 --disable-warnings --cov-report=xml --cov-config=pyproject.toml --cov=src/font_organizer --cov=tests tests/
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
@@ -167,17 +169,17 @@ jobs:
       - name: Build binary (Windows)
         if: runner.os == 'Windows'
         run: |
-          python -m PyInstaller --onefile --name twat-video --distpath dist-binary --workpath build-binary --specpath build-binary src/twat_video/cli.py
+          python -m PyInstaller --onefile --name font-organizer --distpath dist-binary --workpath build-binary --specpath build-binary src/font_organizer/cli.py
 
       - name: Test binary (Linux/macOS)
         if: runner.os != 'Windows'
         run: |
-          ./dist-binary/twat-video --version
+          ./dist-binary/font-organizer --version
 
       - name: Test binary (Windows)
         if: runner.os == 'Windows'
         run: |
-          .\dist-binary\twat-video.exe --version
+          .\dist-binary\font-organizer.exe --version
 
       - name: Upload binary artifacts
         uses: actions/upload-artifact@v4

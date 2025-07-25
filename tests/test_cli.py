@@ -1,11 +1,12 @@
 """Test suite for the CLI module."""
+# this_file: tests/test_cli.py
 
 import pytest
 from click.testing import CliRunner
 from unittest.mock import patch, MagicMock
 
-from twat_video.cli import cli
-from twat_video import __version__
+from font_organizer.cli import cli
+from font_organizer import __version__
 
 
 class TestCLI:
@@ -25,8 +26,8 @@ class TestCLI:
         """Test help output."""
         result = self.runner.invoke(cli, ["--help"])
         assert result.exit_code == 0
-        assert "twat-video" in result.output
-        assert "modern Python project" in result.output
+        assert "font-organizer" in result.output
+        assert "font organization tool" in result.output
 
     def test_version_command(self):
         """Test version command."""
@@ -77,7 +78,7 @@ class TestCLI:
 
     def test_process_command_exception_handling(self):
         """Test process command exception handling."""
-        with patch('twat_video.cli.process_data') as mock_process:
+        with patch('font_organizer.cli.process_data') as mock_process:
             mock_process.side_effect = ValueError("Test error")
             result = self.runner.invoke(cli, ["process", "item1"])
             assert result.exit_code == 1
@@ -96,7 +97,7 @@ class TestCLI:
 
     def test_demo_command_exception_handling(self):
         """Test demo command exception handling."""
-        with patch('twat_video.cli.lib_main') as mock_main:
+        with patch('font_organizer.cli.lib_main') as mock_main:
             mock_main.side_effect = RuntimeError("Test error")
             result = self.runner.invoke(cli, ["demo"])
             assert result.exit_code == 1
