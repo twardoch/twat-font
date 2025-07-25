@@ -1,5 +1,3 @@
-# this_file: .github/workflows/release.yml
-
 name: Release
 
 on:
@@ -16,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: pypi
-      url: https://pypi.org/p/font-organizer
+      url: https://pypi.org/p/twat-video
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -98,17 +96,17 @@ jobs:
       - name: Build binary (Windows)
         if: runner.os == 'Windows'
         run: |
-          python -m PyInstaller --onefile --name font-organizer --distpath dist-binary --workpath build-binary --specpath build-binary src/font_organizer/cli.py
+          python -m PyInstaller --onefile --name twat-video --distpath dist-binary --workpath build-binary --specpath build-binary src/twat_video/cli.py
 
       - name: Rename binary for release
         run: |
           mkdir -p release-binaries
           if [ "$RUNNER_OS" == "Linux" ]; then
-            cp dist-binary/font-organizer release-binaries/font-organizer-linux-x64
+            cp dist-binary/twat-video release-binaries/twat-video-linux-x64
           elif [ "$RUNNER_OS" == "Windows" ]; then
-            cp dist-binary/font-organizer.exe release-binaries/font-organizer-windows-x64.exe
+            cp dist-binary/twat-video.exe release-binaries/twat-video-windows-x64.exe
           elif [ "$RUNNER_OS" == "macOS" ]; then
-            cp dist-binary/font-organizer release-binaries/font-organizer-macos-x64
+            cp dist-binary/twat-video release-binaries/twat-video-macos-x64
           fi
         shell: bash
 
@@ -148,17 +146,17 @@ jobs:
             
             ### Python Package
             ```bash
-            pip install font-organizer
+            pip install twat-video
             ```
             
             ### Binary Downloads
-            - **Linux**: `font-organizer-linux-x64`
-            - **Windows**: `font-organizer-windows-x64.exe`
-            - **macOS**: `font-organizer-macos-x64`
+            - **Linux**: `twat-video-linux-x64`
+            - **Windows**: `twat-video-windows-x64.exe`
+            - **macOS**: `twat-video-macos-x64`
             
             Make the binary executable on Unix systems:
             ```bash
-            chmod +x font-organizer-linux-x64  # or font-organizer-macos-x64
+            chmod +x twat-video-linux-x64  # or twat-video-macos-x64
             ```
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
