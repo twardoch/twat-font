@@ -1,0 +1,103 @@
+# this_file: mkdocs.yml
+
+site_name: Font Organizer
+site_description: Modern font organization tool for managing and curating font collections
+site_url: https://github.com/twardoch/font_organizer
+repo_url: https://github.com/twardoch/font_organizer
+repo_name: twardoch/font_organizer
+docs_dir: src_docs
+site_dir: docs
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.prune
+    - navigation.indexes
+    - navigation.top
+    - toc.follow
+    - toc.integrate
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          options:
+            show_source: true
+            show_bases: true
+            show_root_heading: true
+            show_if_no_docstring: true
+            show_signature_annotations: true
+            show_symbol_type_in_heading: true
+            separate_signature: true
+            group_by_category: true
+            merge_init_into_class: true
+            show_submodules: false
+
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - toc:
+      permalink: true
+  - attr_list
+  - md_in_html
+
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Installation: getting-started/installation.md
+      - Quick Start: getting-started/quickstart.md
+      - Configuration: getting-started/configuration.md
+  - User Guide:
+      - Basic Usage: guide/basic-usage.md
+      - Font Organization: guide/font-organization.md
+      - Detection & Analysis: guide/detection-analysis.md
+      - Subsetting: guide/subsetting.md
+      - Command Reference: guide/commands.md
+  - API Reference:
+      - Overview: api/overview.md
+      - Core Modules: api/core.md
+      - Utilities: api/utilities.md
+  - Development:
+      - Contributing: development/contributing.md
+      - Testing: development/testing.md
+      - Architecture: development/architecture.md
+  - Changelog: changelog.md
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/twardoch/font_organizer
+  version:
+    provider: mike

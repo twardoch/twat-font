@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """
-Command-line interface for twat_video.
+Command-line interface for font_organizer.
 
-This module provides a CLI interface using Click for the twat_video package.
+This module provides a CLI interface using Click for the font_organizer package.
 """
-# this_file: src/twat_video/cli.py
+# this_file: src/font_organizer/cli.py
 
 from __future__ import annotations
 
@@ -39,7 +39,7 @@ logger = logging.getLogger(__name__)
 )
 @click.pass_context
 def cli(ctx: click.Context, verbose: bool, quiet: bool) -> None:
-    """twat-video: A modern Python project scaffold and toolkit."""
+    """font-organizer: Modern font organization tool for managing and curating font collections."""
     ctx.ensure_object(dict)
     
     # Configure logging level
@@ -56,7 +56,7 @@ def cli(ctx: click.Context, verbose: bool, quiet: bool) -> None:
 @click.pass_context
 def version(ctx: click.Context) -> None:
     """Show version information."""
-    click.echo(f"twat-video version {__version__}")
+    click.echo(f"font-organizer version {__version__}")
     
     if ctx.obj.get("verbose"):
         click.echo(f"Python version: {sys.version}")
