@@ -2,9 +2,9 @@
 
 site_name: Font Organizer
 site_description: Modern font organization tool for managing and curating font collections
-site_url: https://github.com/twardoch/font_organizer
-repo_url: https://github.com/twardoch/font_organizer
-repo_name: twardoch/font_organizer
+site_url: https://github.com/twardoch/twat-font
+repo_url: https://github.com/twardoch/twat-font
+repo_name: twardoch/twat-font
 docs_dir: src_docs
 site_dir: docs
 
@@ -98,6 +98,6 @@ nav:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/twardoch/font_organizer
+      link: https://github.com/twardoch/twat-font
   version:
     provider: mike

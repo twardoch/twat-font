@@ -3,10 +3,10 @@
 
 import pytest
 from click.testing import CliRunner
-from unittest.mock import patch, MagicMock
+from unittest.mock import patch
 
-from font_organizer.cli import cli
-from font_organizer import __version__
+from twat_font.cli import cli
+from twat_font import __version__
 
 
 class TestCLI:
@@ -50,12 +50,9 @@ class TestCLI:
 
     def test_process_command_with_config(self):
         """Test process command with configuration options."""
-        result = self.runner.invoke(cli, [
-            "process",
-            "--config-name", "test_config",
-            "--config-value", "test_value",
-            "item1"
-        ])
+        result = self.runner.invoke(
+            cli, ["process", "--config-name", "test_config", "--config-value", "test_value", "item1"]
+        )
         assert result.exit_code == 0
         assert "Processed 1 items successfully" in result.output
 
@@ -78,7 +75,7 @@ class TestCLI:
 
     def test_process_command_exception_handling(self):
         """Test process command exception handling."""
-        with patch('font_organizer.cli.process_data') as mock_process:
+        with patch("twat_font.cli.process_data") as mock_process:
             mock_process.side_effect = ValueError("Test error")
             result = self.runner.invoke(cli, ["process", "item1"])
             assert result.exit_code == 1
@@ -97,7 +94,7 @@ class TestCLI:
 
     def test_demo_command_exception_handling(self):
         """Test demo command exception handling."""
-        with patch('font_organizer.cli.lib_main') as mock_main:
+        with patch("twat_font.cli.lib_main") as mock_main:
             mock_main.side_effect = RuntimeError("Test error")
             result = self.runner.invoke(cli, ["demo"])
             assert result.exit_code == 1
@@ -116,9 +113,10 @@ class TestCLI:
             result = self.runner.invoke(cli, ["config", "--output-file", "test_config.yml"])
             assert result.exit_code == 0
             assert "Configuration written to: test_config.yml" in result.output
-            
+
             # Check file was created
             import os
+
             assert os.path.exists("test_config.yml")
 
     def test_config_command_file_error(self):
@@ -146,6 +144,7 @@ class TestCLI:
 
     def test_cli_context_object(self):
         """Test CLI context object is properly set."""
+
         @cli.command()
         @pytest.fixture
         def test_context(ctx):
@@ -165,7 +164,7 @@ class TestCLI:
         # Test with quiet flag
         result = self.runner.invoke(cli, ["--quiet", "version"])
         assert result.exit_code == 0
-        
+
         # Test with verbose flag
         result = self.runner.invoke(cli, ["--verbose", "version"])
         assert result.exit_code == 0

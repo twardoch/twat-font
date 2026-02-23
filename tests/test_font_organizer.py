@@ -1,15 +1,12 @@
-"""Test suite for the font_organizer package."""
-# this_file: tests/test_font_organizer.py
+"""Test suite for the twat_font package."""
+# this_file: tests/test_twat_font.py
 
 import logging
 import pytest
-import sys
-import os
-from unittest.mock import patch, MagicMock
-from dataclasses import FrozenInstanceError
+from unittest.mock import patch
 
-from font_organizer import Config, process_data, main as font_organizer_main
-from font_organizer import __version__
+from twat_font import Config, process_data, main as twat_font_main
+from twat_font import __version__
 
 
 def test_version_is_exposed():
@@ -62,7 +59,7 @@ def test_process_data_debug_mode(caplog):
     sample_data = ["debug_item"]
     sample_config = Config(name="debug_config")
 
-    with caplog.at_level(logging.DEBUG, logger="font_organizer.font_organizer"):
+    with caplog.at_level(logging.DEBUG, logger="twat_font.font_organizer"):
         process_data(data=sample_data, config=sample_config, debug=True)
 
     assert "Debug mode enabled for process_data" in caplog.text
@@ -75,11 +72,11 @@ def test_process_data_debug_mode(caplog):
 def test_process_data_no_config():
     """Test process_data when no config is provided."""
     sample_data = ["item_no_config"]
-    result = process_data(data=sample_data, config=None) # type: ignore # Testing None explicitly
+    result = process_data(data=sample_data, config=None)  # type: ignore # Testing None explicitly
 
     assert result["status"] == "processed"
     assert result["item_count"] == len(sample_data)
-    assert result["config_name"] == "N/A" # As per current implementation
+    assert result["config_name"] == "N/A"  # As per current implementation
     assert result["first_item"] == sample_data[0]
 
 
@@ -90,13 +87,14 @@ def test_main_runs_without_error(caplog):
     """
     try:
         # Capture logs to see if main function runs as expected
-        with caplog.at_level(logging.INFO, logger="font_organizer.font_organizer"):
-            font_organizer_main()
-        assert "Starting font_organizer application" in caplog.text
+        with caplog.at_level(logging.INFO, logger="twat_font.font_organizer"):
+            twat_font_main()
+        assert "Starting twat_font application" in caplog.text
         assert "Processing completed. Result:" in caplog.text
-        assert "font_organizer application finished." in caplog.text
+        assert "twat_font application finished." in caplog.text
     except Exception as e:
         pytest.fail(f"main() function raised an unexpected exception: {e}")
+
 
 # Example of a test that might be skipped if a dependency is missing
 # @pytest.mark.skipif(not pytest.importorskip("some_optional_dependency"), reason="some_optional_dependency not installed")
@@ -118,22 +116,23 @@ def test_main_runs_without_error(caplog):
 
 # Additional comprehensive tests
 
+
 def test_config_dataclass_features():
     """Test Config dataclass specific features."""
     config = Config()
     # Test field access
-    assert hasattr(config, 'name')
-    assert hasattr(config, 'value')
-    assert hasattr(config, 'options')
-    
+    assert hasattr(config, "name")
+    assert hasattr(config, "value")
+    assert hasattr(config, "options")
+
     # Test that options field has default factory
     config1 = Config()
     config2 = Config()
     assert config1.options is not config2.options  # Different dict instances
-    
+
     # Test mutation of options
-    config.options['test'] = 'value'
-    assert config.options['test'] == 'value'
+    config.options["test"] = "value"
+    assert config.options["test"] == "value"
 
 
 def test_config_different_value_types():
@@ -141,22 +140,25 @@ def test_config_different_value_types():
     # String value
     config_str = Config(value="string_value")
     assert config_str.value == "string_value"
-    
+
     # Integer value
     config_int = Config(value=42)
     assert config_int.value == 42
-    
+
     # Float value
     config_float = Config(value=3.14)
     assert config_float.value == 3.14
 
 
-@pytest.mark.parametrize("data,expected_count", [
-    (["single_item"], 1),
-    ([1, 2, 3], 3),
-    (["a", "b", "c", "d", "e"], 5),
-    ([{"key": "value"}, [1, 2, 3]], 2),
-])
+@pytest.mark.parametrize(
+    "data,expected_count",
+    [
+        (["single_item"], 1),
+        ([1, 2, 3], 3),
+        (["a", "b", "c", "d", "e"], 5),
+        ([{"key": "value"}, [1, 2, 3]], 2),
+    ],
+)
 def test_process_data_different_inputs(data, expected_count):
     """Test process_data with various input types and sizes."""
     result = process_data(data)
@@ -170,10 +172,10 @@ def test_process_data_logging_levels(caplog):
     """Test that process_data logs at appropriate levels."""
     sample_data = ["test_item"]
     sample_config = Config(name="logging_test")
-    
+
     with caplog.at_level(logging.INFO):
         process_data(sample_data, sample_config)
-    
+
     # Check INFO level logs
     assert "Processing data with config: logging_test" in caplog.text
     assert "Data processing complete." in caplog.text
@@ -181,36 +183,37 @@ def test_process_data_logging_levels(caplog):
 
 def test_process_data_debug_logger_reset():
     """Test that debug mode properly resets logger level."""
-    import font_organizer.font_organizer as module
+    import twat_font.font_organizer as module
+
     original_level = module.logger.level
-    
+
     sample_data = ["debug_test"]
     process_data(sample_data, debug=True)
-    
+
     # Logger level should be reset to original
     assert module.logger.level == original_level
 
 
 def test_main_exception_handling(caplog):
     """Test main function exception handling."""
-    with patch('font_organizer.font_organizer.process_data') as mock_process:
+    with patch("twat_font.font_organizer.process_data") as mock_process:
         mock_process.side_effect = ValueError("Test error")
-        
+
         with caplog.at_level(logging.ERROR):
-            font_organizer_main()
-        
+            twat_font_main()
+
         assert "A ValueError occurred during processing" in caplog.text
 
 
 def test_main_critical_exception_handling(caplog):
     """Test main function critical exception handling."""
-    with patch('font_organizer.font_organizer.process_data') as mock_process:
+    with patch("twat_font.font_organizer.process_data") as mock_process:
         mock_process.side_effect = RuntimeError("Critical error")
-        
+
         with caplog.at_level(logging.CRITICAL):
             with pytest.raises(RuntimeError):
-                font_organizer_main()
-        
+                twat_font_main()
+
         assert "An unexpected critical error occurred" in caplog.text
 
 
@@ -224,12 +227,12 @@ def test_version_format():
 
 def test_module_imports():
     """Test that all expected symbols are properly imported."""
-    import font_organizer
-    
+    import twat_font
+
     # Check __all__ exports
     expected_exports = ["Config", "process_data", "main", "__version__"]
     for export in expected_exports:
-        assert hasattr(font_organizer, export)
+        assert hasattr(twat_font, export)
 
 
 def test_config_repr():
@@ -244,15 +247,9 @@ def test_config_repr():
 def test_process_data_with_complex_config():
     """Test process_data with complex configuration."""
     complex_config = Config(
-        name="complex_test",
-        value=999,
-        options={
-            "nested": {"key": "value"},
-            "list": [1, 2, 3],
-            "boolean": True
-        }
+        name="complex_test", value=999, options={"nested": {"key": "value"}, "list": [1, 2, 3], "boolean": True}
     )
-    
+
     result = process_data(["test"], complex_config)
     assert result["config_name"] == "complex_test"
     assert result["status"] == "processed"
@@ -260,20 +257,21 @@ def test_process_data_with_complex_config():
 
 def test_logging_configuration():
     """Test that logging is properly configured."""
-    import font_organizer.font_organizer as module
-    
+    import twat_font.font_organizer as module
+
     # Logger should be configured
-    assert module.logger.name == "font_organizer.font_organizer"
+    assert module.logger.name == "twat_font.font_organizer"
     assert isinstance(module.logger, logging.Logger)
 
 
 # Performance and edge case tests
 
+
 def test_process_data_large_dataset():
     """Test process_data with a large dataset."""
     large_data = list(range(10000))
     result = process_data(large_data)
-    
+
     assert result["status"] == "processed"
     assert result["item_count"] == 10000
     assert result["first_item"] == 0
@@ -281,16 +279,8 @@ def test_process_data_large_dataset():
 
 def test_process_data_mixed_types():
     """Test process_data with mixed data types."""
-    mixed_data = [
-        "string",
-        42,
-        [1, 2, 3],
-        {"key": "value"},
-        None,
-        True,
-        3.14
-    ]
-    
+    mixed_data = ["string", 42, [1, 2, 3], {"key": "value"}, None, True, 3.14]
+
     result = process_data(mixed_data)
     assert result["status"] == "processed"
     assert result["item_count"] == 7
@@ -302,7 +292,7 @@ def test_config_equality():
     config1 = Config(name="test", value=123)
     config2 = Config(name="test", value=123)
     config3 = Config(name="different", value=123)
-    
+
     assert config1 == config2
     assert config1 != config3
 
@@ -311,18 +301,14 @@ def test_config_equality():
 def test_full_workflow_integration():
     """Test the full workflow from config creation to processing."""
     # Create configuration
-    config = Config(
-        name="integration_test",
-        value="test_value",
-        options={"mode": "test", "debug": True}
-    )
-    
+    config = Config(name="integration_test", value="test_value", options={"mode": "test", "debug": True})
+
     # Create test data
     test_data = ["item1", "item2", "item3"]
-    
+
     # Process data
     result = process_data(test_data, config, debug=True)
-    
+
     # Verify results
     assert result["status"] == "processed"
     assert result["item_count"] == 3
@@ -350,7 +336,7 @@ def test_process_data_with_none_items():
     """Test process_data handles None items in data."""
     data_with_none = ["item1", None, "item3"]
     result = process_data(data_with_none)
-    
+
     assert result["status"] == "processed"
     assert result["item_count"] == 3
     assert result["first_item"] == "item1"

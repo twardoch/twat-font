@@ -1,4 +1,4 @@
-# this_file: src/font_organizer/core/exceptions.py
+# this_file: src/twat_font/core/exceptions.py
 """
 Custom exceptions for the font organizer application.
 

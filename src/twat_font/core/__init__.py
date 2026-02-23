@@ -1,4 +1,4 @@
-# this_file: src/font_organizer/core/__init__.py
+# this_file: src/twat_font/core/__init__.py
 """
 Core module for font organization functionality.
 

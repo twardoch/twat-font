@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 """
-font_organizer
+twat_font
 
-Core module for font organization functionality.
+Core module for twat_font (font organization) functionality.
 Provides font management, organization, and analysis capabilities.
 
 Created by Adam Twardoch
 """
-# this_file: src/font_organizer/font_organizer.py
+# this_file: src/twat_font/font_organizer.py
 
 from __future__ import annotations
 
@@ -15,11 +15,15 @@ import logging
 from dataclasses import dataclass, field
 from typing import Any
 
-# Import the version from the dedicated file, which is managed by hatch-vcs
-from .__version__ import __version__
+from importlib.metadata import PackageNotFoundError, version as _get_version
+
+try:
+    __version__ = _get_version("twat-font")
+except PackageNotFoundError:
+    __version__ = "0.0.0-dev"
 
 # Define what is publicly available when importing *
-__all__ = ["Config", "process_data", "main", "__version__"]
+__all__ = ["Config", "__version__", "main", "process_data"]
 
 # Configure basic logging
 # Applications using this library should configure their own logging handlers.
@@ -50,9 +54,7 @@ class Config:
     """Optional dictionary for more detailed settings."""
 
 
-def process_data(
-    data: list[Any], config: Config | None = None, *, debug: bool = False
-) -> dict[str, Any]:
+def process_data(data: list[Any], config: Config | None = None, *, debug: bool = False) -> dict[str, Any]:
     """
     Processes the input data according to the provided configuration.
 
@@ -108,12 +110,12 @@ def process_data(
 
 def main() -> None:
     """
-    Main entry point for the font_organizer application when run as a script.
+    Main entry point for the twat_font application when run as a script.
 
     This function demonstrates example usage of the `process_data` function.
     It sets up a sample configuration and data, then calls `process_data`.
     """
-    logger.info("Starting font_organizer application (version %s)...", __version__)
+    logger.info("Starting twat_font application (version %s)...", __version__)
 
     try:
         # Example: Create a configuration object
@@ -142,9 +144,9 @@ def main() -> None:
         # Re-raise the exception after logging, or handle it as appropriate
         raise
     finally:
-        logger.info("font_organizer application finished.")
+        logger.info("twat_font application finished.")
 
 
 if __name__ == "__main__":
-    # This block executes if the script is run directly (e.g., python -m font_organizer.font_organizer)
+    # This block executes if the script is run directly (e.g., python -m twat_font.font_organizer)
     main()

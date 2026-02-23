@@ -1,4 +1,4 @@
-"""Integration tests for the font_organizer package."""
+"""Integration tests for the twat_font package."""
 # this_file: tests/test_integration.py
 
 import pytest
@@ -7,7 +7,7 @@ import sys
 import os
 from pathlib import Path
 
-from font_organizer import __version__
+from twat_font import __version__
 
 
 class TestIntegration:
@@ -15,120 +15,119 @@ class TestIntegration:
 
     def test_package_import(self):
         """Test that the package can be imported successfully."""
-        import font_organizer
-        assert hasattr(font_organizer, '__version__')
-        assert hasattr(font_organizer, 'Config')
-        assert hasattr(font_organizer, 'process_data')
-        assert hasattr(font_organizer, 'main')
+        import twat_font
+
+        assert hasattr(twat_font, "__version__")
+        assert hasattr(twat_font, "Config")
+        assert hasattr(twat_font, "process_data")
+        assert hasattr(twat_font, "main")
 
     def test_module_execution(self):
         """Test that the module can be executed directly."""
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.font_organizer"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.font_organizer"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode == 0
         # Output goes to stderr due to logging configuration
         output = result.stdout + result.stderr
-        assert "Starting font_organizer application" in output
-        assert "font_organizer application finished" in output
+        assert "Starting twat_font application" in output
+        assert "twat_font application finished" in output
 
     def test_cli_execution(self):
         """Test that the CLI can be executed."""
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", "--version"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "--version"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode == 0
         assert __version__ in result.stdout
 
     def test_cli_process_command(self):
         """Test CLI process command integration."""
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", "process", "test_item"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "process", "test_item"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode == 0
         assert "Processed 1 items successfully" in result.stdout
 
     def test_cli_demo_command(self):
         """Test CLI demo command integration."""
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", "demo"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "demo"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode == 0
 
     def test_version_consistency(self):
         """Test that version is consistent across different access methods."""
         # Import version
-        from font_organizer import __version__ as import_version
-        
+        from twat_font import __version__ as import_version
+
         # CLI version
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", "--version"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "--version"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode == 0
         assert import_version in result.stdout
 
     def test_error_handling_integration(self):
         """Test error handling in real execution."""
         # Test with invalid CLI command
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", "invalid_command"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "invalid_command"], capture_output=True, text=True, timeout=30
+        )
+
         assert result.returncode != 0
 
     def test_package_structure(self):
         """Test that package structure is correct."""
-        import font_organizer
-        package_path = Path(font_organizer.__file__).parent
-        
+        import twat_font
+
+        package_path = Path(twat_font.__file__).parent
+
         # Check required files exist
         assert (package_path / "__init__.py").exists()
         assert (package_path / "font_organizer.py").exists()
         assert (package_path / "cli.py").exists()
-        assert (package_path / "__version__.py").exists()
+        assert (package_path / "py.typed").exists()
 
     def test_config_file_generation(self):
         """Test config file generation integration."""
         import tempfile
-        import os
-        
+
         with tempfile.TemporaryDirectory() as tmp_dir:
             config_file = os.path.join(tmp_dir, "test_config.yml")
-            
-            result = subprocess.run([
-                sys.executable, "-m", "font_organizer.cli", 
-                "config", "--output-file", config_file
-            ], capture_output=True, text=True, timeout=30)
-            
+
+            result = subprocess.run(
+                [sys.executable, "-m", "twat_font.cli", "config", "--output-file", config_file],
+                capture_output=True,
+                text=True,
+                timeout=30,
+            )
+
             assert result.returncode == 0
             assert os.path.exists(config_file)
-            
+
             # Check file content
-            with open(config_file, 'r') as f:
+            with open(config_file) as f:
                 content = f.read()
                 assert "Sample Configuration" in content
                 assert "name: sample_config" in content
 
     def test_comprehensive_workflow(self):
         """Test a comprehensive workflow using the package."""
-        from font_organizer import Config, process_data
-        
+        from twat_font import Config, process_data
+
         # Create configuration
-        config = Config(
-            name="integration_test",
-            value=42,
-            options={"test": True}
-        )
-        
+        config = Config(name="integration_test", value=42, options={"test": True})
+
         # Process data
         test_data = ["item1", "item2", "item3"]
         result = process_data(test_data, config=config)
-        
+
         # Verify results
         assert result["status"] == "processed"
         assert result["item_count"] == 3
@@ -137,40 +136,46 @@ class TestIntegration:
     def test_cli_with_different_options(self):
         """Test CLI with various option combinations."""
         # Test verbose mode
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", 
-            "--verbose", "process", "item1"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "--verbose", "process", "item1"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
         assert result.returncode == 0
         assert "Processing result" in result.stdout
-        
+
         # Test quiet mode
-        result = subprocess.run([
-            sys.executable, "-m", "font_organizer.cli", 
-            "--quiet", "process", "item1"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-m", "twat_font.cli", "--quiet", "process", "item1"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
         assert result.returncode == 0
 
     def test_environment_independence(self):
         """Test that the package works in different environments."""
         # Test with different Python executable paths
-        result = subprocess.run([
-            sys.executable, "-c", 
-            "import font_organizer; print(font_organizer.__version__)"
-        ], capture_output=True, text=True, timeout=30)
-        
+        result = subprocess.run(
+            [sys.executable, "-c", "import twat_font; print(twat_font.__version__)"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+
         assert result.returncode == 0
         assert __version__ in result.stdout
 
     def test_memory_usage(self):
         """Test basic memory usage patterns."""
-        from font_organizer import Config, process_data
-        
+        from twat_font import Config, process_data
+
         # Create multiple configs and process data
         configs = [Config(name=f"config_{i}") for i in range(100)]
-        
+
         for config in configs:
             result = process_data([f"item_{i}" for i in range(10)], config=config)
             assert result["status"] == "processed"
@@ -179,27 +184,27 @@ class TestIntegration:
     def test_concurrent_usage(self):
         """Test concurrent usage patterns."""
         import threading
-        from font_organizer import Config, process_data
-        
+        from twat_font import Config, process_data
+
         results = []
-        
+
         def worker(thread_id):
             config = Config(name=f"thread_{thread_id}")
             data = [f"item_{i}" for i in range(5)]
             result = process_data(data, config=config)
             results.append(result)
-        
+
         # Run multiple threads
         threads = []
         for i in range(5):
             t = threading.Thread(target=worker, args=(i,))
             threads.append(t)
             t.start()
-        
+
         # Wait for completion
         for t in threads:
             t.join()
-        
+
         # Verify all results
         assert len(results) == 5
         for result in results:
@@ -208,14 +213,14 @@ class TestIntegration:
 
     def test_large_data_processing(self):
         """Test processing large amounts of data."""
-        from font_organizer import Config, process_data
-        
+        from twat_font import Config, process_data
+
         # Create large dataset
         large_data = list(range(10000))
         config = Config(name="large_test")
-        
+
         result = process_data(large_data, config=config)
-        
+
         assert result["status"] == "processed"
         assert result["item_count"] == 10000
         assert result["first_item"] == 0
@@ -224,12 +229,12 @@ class TestIntegration:
     def test_unix_permissions(self):
         """Test Unix-specific functionality."""
         # Test that files have correct permissions
-        import font_organizer
+        import twat_font
         import stat
-        
-        package_path = Path(font_organizer.__file__).parent
+
+        package_path = Path(twat_font.__file__).parent
         py_files = list(package_path.glob("*.py"))
-        
+
         for py_file in py_files:
             file_stat = py_file.stat()
             # Check that file is readable
@@ -238,18 +243,16 @@ class TestIntegration:
     def test_import_performance(self):
         """Test import performance."""
         import time
-        
+
         start_time = time.time()
-        import font_organizer
         import_time = time.time() - start_time
-        
+
         # Import should be reasonably fast (less than 1 second)
         assert import_time < 1.0
-        
+
         # Test that subsequent imports are cached
         start_time = time.time()
-        import font_organizer  # Should be cached
         cached_import_time = time.time() - start_time
-        
+
         # Cached import should be much faster
         assert cached_import_time < 0.1

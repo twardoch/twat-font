@@ -1,3 +1,7 @@
+---
+this_file: LOG.md
+---
+
 # Changelog
 
 All notable changes to this project will be documented in this file.
@@ -5,45 +9,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [v0.0.1] - 2025-02-15
+
+Initial release of the twat-video package.
 
 ### Added
-- Initial project structure and scaffolding
-- Core module architecture for font management
-  - `FontInfo` class for extracting font metadata
-  - `FontManager` class for coordinating font operations
-  - `Config` system with YAML/JSON support
-  - Custom exceptions for better error handling
-- Font information extraction capabilities
-  - Font family, subfamily, and style detection
-  - Weight classification (100-900 scale)
-  - Character coverage analysis
-  - OpenType feature detection
-  - File hash calculation for duplicate detection
-- MkDocs documentation setup with Material theme
-- Comprehensive test suite with pytest
-- CI/CD workflows for automated testing and releases
-- Pre-commit hooks for code quality
-- Binary build support with PyInstaller
+
+- Basic project structure with modern Python packaging (PEP 621 compliant)
+- Initial implementation of `twat_video.py` with:
+  - Configuration class with type hints
+  - Data processing functionality
+  - Logging setup
+- Added `videoextendprompt.py` script for:
+  - Generating video continuation prompts based on image frame analysis
+  - Support for multiple AI models (Gemini, GPT-4, Claude-3, Grok-2)
+  - Image pair processing functionality
+  - Markdown output generation
+- Project setup with Hatch for development workflow
+- Basic documentation in README.md
+- MIT License
 
 ### Changed
-- Renamed project from twat-video to font-organizer
-- Updated all documentation to reflect font management focus
-- Restructured package to use modular architecture
 
-### Planned Features
-- Font detection and scanning functionality
-- Intelligent font organization by family, style, and weight
-- Font subsetting capabilities
-- Duplicate font detection
-- Font analysis and reporting tools
-- Web font optimization
-- Character coverage analysis
-- OpenType feature extraction
+- Moved `twat_video.py` to proper module structure
+- Updated .gitignore to exclude private files
 
-## [0.1.0] - TBD
+## [Initial Commit] - 2025-02-09
 
-Initial release (planned)
+- Repository initialization
+- Basic project structure setup
 
-[Unreleased]: https://github.com/twardoch/font-organizer/compare/v0.1.0...HEAD
-[0.1.0]: https://github.com/twardoch/font-organizer/releases/tag/v0.1.0
+[v0.0.1]: https://github.com/twardoch/twat-video/releases/tag/v0.0.1 
