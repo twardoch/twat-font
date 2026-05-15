@@ -1,6 +1,6 @@
 """twat-font: Font organization and management."""
 
-from .__version__ import __version__  # noqa: F401
+from .__version__ import __version__
 
 from twat_font.font_organizer import Config as LegacyConfig, main as _legacy_main, process_data
 from twat_font.core import (

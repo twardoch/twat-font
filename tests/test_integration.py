@@ -25,7 +25,7 @@ class TestIntegration:
     def test_module_execution(self):
         """Test that the module can be executed directly."""
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.font_organizer"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.font_organizer"], capture_output=True, text=True, timeout=30, check=False
         )
 
         assert result.returncode == 0
@@ -37,7 +37,11 @@ class TestIntegration:
     def test_cli_execution(self):
         """Test that the CLI can be executed."""
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.cli", "--version"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.cli", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
@@ -46,7 +50,11 @@ class TestIntegration:
     def test_cli_process_command(self):
         """Test CLI process command integration."""
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.cli", "process", "test_item"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.cli", "process", "test_item"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
@@ -55,7 +63,7 @@ class TestIntegration:
     def test_cli_demo_command(self):
         """Test CLI demo command integration."""
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.cli", "demo"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.cli", "demo"], capture_output=True, text=True, timeout=30, check=False
         )
 
         assert result.returncode == 0
@@ -67,7 +75,11 @@ class TestIntegration:
 
         # CLI version
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.cli", "--version"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.cli", "--version"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
@@ -77,7 +89,11 @@ class TestIntegration:
         """Test error handling in real execution."""
         # Test with invalid CLI command
         result = subprocess.run(
-            [sys.executable, "-m", "twat_font.cli", "invalid_command"], capture_output=True, text=True, timeout=30
+            [sys.executable, "-m", "twat_font.cli", "invalid_command"],
+            capture_output=True,
+            text=True,
+            timeout=30,
+            check=False,
         )
 
         assert result.returncode != 0
@@ -106,6 +122,7 @@ class TestIntegration:
                 capture_output=True,
                 text=True,
                 timeout=30,
+                check=False,
             )
 
             assert result.returncode == 0
@@ -141,6 +158,7 @@ class TestIntegration:
             capture_output=True,
             text=True,
             timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
@@ -152,6 +170,7 @@ class TestIntegration:
             capture_output=True,
             text=True,
             timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
@@ -164,6 +183,7 @@ class TestIntegration:
             capture_output=True,
             text=True,
             timeout=30,
+            check=False,
         )
 
         assert result.returncode == 0
