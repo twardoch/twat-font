@@ -1,5 +1,5 @@
 # this_file: pyproject.toml
-# this_project: font_organizer
+# this_project: twat_font
 
 # Build System Configuration
 # -------------------------
@@ -15,7 +15,7 @@ build-backend = "hatchling.build"  # Use Hatchling as the build backend
 # Wheel build configuration
 # Specifies which packages to include in the wheel distribution
 [tool.hatch.build.targets.wheel]
-packages = ["src/font_organizer"]
+packages = ["src/twat_font"]
 
 # Project Metadata Configuration
 # ------------------------------
@@ -59,12 +59,12 @@ email = "adam+github@twardoch.com"
 
 
 [project.urls]
-Documentation = "https://github.com/twardoch/font_organizer#readme"
-Issues = "https://github.com/twardoch/font_organizer/issues"
-Source = "https://github.com/twardoch/font_organizer"
+Documentation = "https://github.com/twardoch/twat_font#readme"
+Issues = "https://github.com/twardoch/twat_font/issues"
+Source = "https://github.com/twardoch/twat_font"
 
 [project.scripts]
-font-organizer = "font_organizer.cli:main"
+twat-font = "twat_font.cli:main"
 
 
 
@@ -94,13 +94,13 @@ dependencies = [
 # Ensure uv is used for running tools if they are managed by hatch's environment
 # Or explicitly use 'uv run' for tools that might not be directly on PATH from hatch env
 test = "uv run pytest {args:tests}"
-test-cov = "uv run pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/font_organizer --cov=tests {args:tests}"
-type-check = "uv run mypy src/font_organizer tests"
+test-cov = "uv run pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_font --cov=tests {args:tests}"
+type-check = "uv run mypy src/twat_font tests"
 # For linting, ruff is typically installed into the environment by Hatch.
 # If Hatch places binaries in a way that `uv run` is beneficial, use it. Otherwise, direct call is fine.
 # Assuming direct call is fine after Hatch setup for these.
-lint = ["uv run ruff check src/font_organizer tests", "uv run ruff format --check src/font_organizer tests"]
-format = "uv run ruff format src/font_organizer tests" # Added explicit format script
+lint = ["uv run ruff check src/twat_font tests", "uv run ruff format --check src/twat_font tests"]
+format = "uv run ruff format src/twat_font tests" # Added explicit format script
 # Script to install/update tools using uv
 tools-install = "uv pip install --upgrade pytest pytest-cov mypy ruff"
 
@@ -119,7 +119,7 @@ dependencies = [
 
 
 [tool.hatch.envs.lint.scripts]
-typing = "uv run mypy --install-types --non-interactive {args:src/font_organizer tests}"
+typing = "uv run mypy --install-types --non-interactive {args:src/twat_font tests}"
 style = ["uv run ruff check {args:.}", "uv run ruff format --check {args:.}"] # Added --check
 fmt = ["uv run ruff format {args:.}", "uv run ruff check --fix {args:.}"]
 all = ["style", "typing"]
@@ -205,17 +205,17 @@ warn_unreachable = true
 
 
 [tool.coverage.run]
-source_pkgs = ["font_organizer", "tests"]
+source_pkgs = ["twat_font", "tests"]
 branch = true
 parallel = true
 omit = [
-    "src/font_organizer/__about__.py",
+    "src/twat_font/__about__.py",
 ]
 
 
 [tool.coverage.paths]
-font_organizer = ["src/font_organizer", "*/font-organizer/src/font_organizer"]
-tests = ["tests", "*/font-organizer/tests"]
+twat_font = ["src/twat_font", "*/twat-font/src/twat_font"]
+tests = ["tests", "*/twat-font/tests"]
 
 
 [tool.coverage.report]
@@ -266,7 +266,7 @@ dependencies = [".[test]"]
 [tool.hatch.envs.test.scripts]
 # Use uv run for consistency, though python -m pytest is also fine as pytest is a dependency.
 test = "uv run pytest -n auto {args:tests}"
-test-cov = "uv run pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/font_organizer --cov=tests {args:tests}"
+test-cov = "uv run pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_font --cov=tests {args:tests}"
 bench = "uv run pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only {args}"
 bench-save = "uv run pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json {args}"
 
