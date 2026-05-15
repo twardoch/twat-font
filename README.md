@@ -1,239 +1,50 @@
-# Font Organizer: Modern Font Management Tool
+# twat-video
 
-[![Build & Test](https://github.com/twardoch/font-organizer/actions/workflows/push.yml/badge.svg)](https://github.com/twardoch/font-organizer/actions/workflows/push.yml)
-[![Release](https://github.com/twardoch/font-organizer/actions/workflows/release.yml/badge.svg)](https://github.com/twardoch/font-organizer/actions/workflows/release.yml)
-[![PyPI version](https://badge.fury.io/py/font-organizer.svg)](https://badge.fury.io/py/font-organizer)
+`twat-video` is the video domain package for the `twat` plugin ecosystem. It builds reusable, testable ffmpeg command wrappers and delegates AI video generation to `twat_genai` when such provider engines are available.
 
-**Font Organizer is a powerful Python-based tool for managing and organizing font collections. It provides intelligent font detection, automated organization, subsetting capabilities, and comprehensive analysis features to help you manage large font libraries efficiently.**
+## Font-organizer preservation
 
-## 🚀 Features
+This repository used to package `font_organizer`. The canonical copy now exists in `plugins/repos/twat_font` as `twat_font`, with the same organizer/core modules and CLI surface. The old source tree is left in this repo only as historical material; the build now packages `src/twat_video`.
 
-- 🔍 **Smart Font Detection**: Automatically discover fonts across your system
-- 📁 **Intelligent Organization**: Sort and categorize fonts by various criteria (family, style, weight)
-- 🔤 **Font Subsetting**: Extract specific character sets for optimized web fonts
-- 📊 **Analysis Tools**: Examine font metrics, character coverage, and OpenType features
-- 🚀 **High Performance**: Efficient processing of large font collections with multi-threading support
-- 🔄 **Duplicate Detection**: Find and manage duplicate fonts by hash and metadata
-- 📈 **Reporting**: Generate detailed HTML/PDF reports about your font collection
+## Requirements
 
-## 📦 Installation
+Install `ffmpeg` and `ffprobe` for real media processing. Tests exercise command construction with `dry_run=True` and do not require media binaries.
 
-### Using pip (Recommended)
-
-```bash
-pip install font-organizer
-```
-
-### Using uv (Fast Alternative)
-
-```bash
-uv pip install font-organizer
-```
-
-### From Source
-
-```bash
-git clone https://github.com/twardoch/font-organizer.git
-cd font-organizer
-pip install -e .
-```
-
-## 🎯 Quick Start
-
-### Basic Usage
-
-```bash
-# Scan a directory for fonts
-font-organizer scan ~/Fonts
-
-# Organize fonts by family
-font-organizer organize ~/Fonts --by family --output ~/OrganizedFonts
-
-# Get information about a specific font
-font-organizer info ~/Fonts/Arial.ttf
-
-# Find duplicate fonts
-font-organizer duplicates ~/Fonts
-
-# Create a subset with basic Latin characters
-font-organizer subset input.ttf output.woff2 --text "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-```
-
-### Command Overview
-
-```bash
-font-organizer --help
-```
-
-Available commands:
-- `scan` - Scan directories for font files
-- `organize` - Organize fonts using various criteria
-- `analyze` - Analyze font collections and generate reports
-- `subset` - Create font subsets with specific characters
-- `duplicates` - Find and manage duplicate fonts
-- `info` - Display detailed font information
-- `config` - Manage configuration settings
-
-## 🔧 Configuration
-
-Font Organizer can be configured using a YAML configuration file:
-
-```yaml
-# ~/.font-organizer/config.yaml
-organize:
-  default_scheme: family  # family, style, weight, or custom
-  copy_mode: true  # true for copy, false for move
-  
-scan:
-  include_system_fonts: true
-  recursive: true
-  font_extensions:
-    - .ttf
-    - .otf
-    - .woff
-    - .woff2
-    
-subset:
-  default_format: woff2
-  optimize: true
-```
-
-## 📚 Advanced Usage
-
-### Organizing Fonts
-
-```bash
-# Organize by multiple criteria
-font-organizer organize ~/Fonts --by family,weight --output ~/Organized
-
-# Use custom organization rules
-font-organizer organize ~/Fonts --rules my-rules.yaml --output ~/Organized
-
-# Dry run to preview organization
-font-organizer organize ~/Fonts --dry-run
-```
-
-### Font Analysis
-
-```bash
-# Generate comprehensive analysis report
-font-organizer analyze ~/Fonts --output report.html
-
-# Export font list to CSV
-font-organizer analyze ~/Fonts --format csv --output fonts.csv
-
-# Check character coverage
-font-organizer analyze ~/Fonts --coverage "Latin,Cyrillic"
-```
-
-### Subsetting Fonts
-
-```bash
-# Create subset with Unicode ranges
-font-organizer subset input.ttf output.woff2 --unicodes "U+0020-007F,U+00A0-00FF"
-
-# Subset for specific language
-font-organizer subset input.ttf output.woff2 --language en,es,fr
-
-# Keep specific OpenType features
-font-organizer subset input.ttf output.woff2 --features "kern,liga"
-```
-
-## 🐍 Python API
+## Python API
 
 ```python
-from font_organizer import FontOrganizer, FontInfo
+from twat_video import crop_scale, import_audio, split_segment
 
-# Initialize organizer
-organizer = FontOrganizer()
-
-# Scan for fonts
-fonts = organizer.scan_directory("~/Fonts")
-
-# Get font information
-for font_path in fonts:
-    info = FontInfo(font_path)
-    print(f"{info.family} - {info.style} ({info.weight})")
-    print(f"  Characters: {len(info.characters)}")
-    print(f"  Features: {', '.join(info.features)}")
-
-# Organize fonts
-organizer.organize(
-    source="~/Fonts",
-    destination="~/OrganizedFonts",
-    scheme="family"
-)
-
-# Find duplicates
-duplicates = organizer.find_duplicates("~/Fonts")
-for group in duplicates:
-    print(f"Duplicate group ({len(group)} files):")
-    for font in group:
-        print(f"  - {font}")
+crop_scale("input.mp4", "square.mp4", crop="1080:1080:420:0", scale="720:720")
+split_segment("input.mp4", "clip.mp4", start=12.5, duration=4.0)
+import_audio("silent.mp4", "voice.wav", "dubbed.mp4")
 ```
 
-## 🛠️ Development
+Implemented deterministic helpers:
 
-### Setting up Development Environment
+- ffmpeg boundary: `run_command`, `run_ffmpeg`, `probe_video`.
+- video geometry/timing: `crop_scale`, `change_fps`, `split_segment`, `reverse_video`.
+- composition: `merge_by_gap`, `ken_burns`.
+- audio/subtitle operations: `import_audio`, `extract_subtitles`, `repair_srt_text`, `add_reverb`.
+- visual effect: `add_grain`.
+
+## CLI
 
 ```bash
-# Clone the repository
-git clone https://github.com/twardoch/font-organizer.git
-cd font-organizer
-
-# Install development dependencies
-pip install -e ".[dev]"
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run tests
-pytest
-
-# Run linting
-ruff check src tests
-mypy src tests
+python -m twat_video --help
+python -m twat_video crop-scale in.mp4 out.mp4 --crop 1080:1080:420:0 --scale 720:720 --dry-run
+python -m twat_video fps in.mp4 out.mp4 24 --dry-run
+python -m twat_video split in.mp4 clip.mp4 --start 1.5 --duration 3 --dry-run
+python -m twat_video import-audio silent.mp4 voice.wav dubbed.mp4 --dry-run
+python -m twat_video ken-burns still.png out.mp4 --duration 5 --dry-run
 ```
 
-### Running Tests
+## AI video boundary
 
-```bash
-# Run all tests
-pytest
+`generate_video()` is a narrow adapter. It imports `twat_genai` and calls a future `twat_genai.generate_video` provider API if present; it does not embed SkyReels, WAN, Chutes, or other provider clients.
 
-# Run with coverage
-pytest --cov=font_organizer --cov-report=html
+## Reference scripts
 
-# Run specific test file
-pytest tests/test_font_info.py
-```
+Reusable patterns from `vidcropscale.py`, `vidfps`, `vidframedrop.py`, `vidsplit.py`, `vidreverse`, `vidmergebygap.py`, `vidkenburns.py`, `vidgrainer.py`, `vidreverb.py`, `vidimportaudio`, `mkv2srt.py`, and `srtmultifix.py` are represented as package APIs.
 
-## 📖 Documentation
-
-Full documentation is available at [https://twardoch.github.io/font-organizer/](https://twardoch.github.io/font-organizer/)
-
-## 🤝 Contributing
-
-Contributions are welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- Built with [fonttools](https://github.com/fonttools/fonttools) for font manipulation
-- Uses [rich](https://github.com/Textualize/rich) for beautiful terminal output
-- Powered by [fire](https://github.com/google/python-fire) for CLI interface
-
-## 📬 Contact
-
-Adam Twardoch - [@adamtwar](https://twitter.com/adamtwar) - adam+github@twardoch.com
-
-Project Link: [https://github.com/twardoch/font-organizer](https://github.com/twardoch/font-organizer)
+Watermark removal, menu-bar automation, JSON presets, batch shell wrappers, and local renaming/upload workflows remain in `reference/bin-img-vid/` because they are workstation-specific one-offs or policy-sensitive scripts rather than reusable package behavior.

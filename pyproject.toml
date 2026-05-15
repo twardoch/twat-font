@@ -1,5 +1,5 @@
 # this_file: pyproject.toml
-# this_project: font_organizer
+# this_project: twat_video
 
 # Build System Configuration
 # -------------------------
@@ -15,26 +15,28 @@ build-backend = "hatchling.build"  # Use Hatchling as the build backend
 # Wheel build configuration
 # Specifies which packages to include in the wheel distribution
 [tool.hatch.build.targets.wheel]
-packages = ["src/font_organizer"]
+packages = ["src/twat_video"]
 
 # Project Metadata Configuration
 # ------------------------------
 # Comprehensive project description, requirements, and compatibility information
 [project]
-name = "font-organizer"
+name = "twat-video"
 dynamic = ["version"]  # Version is determined dynamically from VCS
-description = "Modern font organization tool for managing and curating font collections"
+description = "Video processing helpers for the twat plugin ecosystem"
 readme = "README.md"
-requires-python = ">=3.12"  # Minimum Python version required
+requires-python = ">=3.10"  # Minimum Python version required
 license = "MIT"
-keywords = ["fonts", "typography", "organization", "fonttools", "subsetting"]
+keywords = ["video", "ffmpeg", "media", "twat-plugin"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Programming Language :: Python",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
-    "Topic :: Text Processing :: Fonts",
+    "Topic :: Multimedia :: Video",
     "Topic :: Utilities",
 ]
 
@@ -42,14 +44,7 @@ classifiers = [
 # -------------------
 # External packages required for the project to function
 dependencies = [
-    "click>=8.0.0",  # For CLI interface
-    "rich>=13.10.6",  # Rich terminal output
-    "fire>=0.7.3",  # CLI framework
-    "fonttools>=4.55.5",  # Font manipulation
-    "loguru>=0.7.3",  # Advanced logging
-    "pathlib>=1.0.1",  # Path operations
-    "typing-extensions>=4.12.2",  # Type hints
-    "pyyaml>=6.0.1",  # YAML configuration support
+    "twat>=1.8.1",
 ]
 
 
@@ -59,12 +54,15 @@ email = "adam+github@twardoch.com"
 
 
 [project.urls]
-Documentation = "https://github.com/twardoch/font_organizer#readme"
-Issues = "https://github.com/twardoch/font_organizer/issues"
-Source = "https://github.com/twardoch/font_organizer"
+Documentation = "https://github.com/twardoch/twat-video#readme"
+Issues = "https://github.com/twardoch/twat-video/issues"
+Source = "https://github.com/twardoch/twat-video"
 
 [project.scripts]
-font-organizer = "font_organizer.cli:main"
+twat-video = "twat_video:main"
+
+[project.entry-points."twat.plugins"]
+video = "twat_video"
 
 
 
@@ -75,7 +73,7 @@ source = "vcs"
 # and the previous option was for setuptools-scm
 
 [tool.hatch.build.hooks.vcs]
-version-file = "src/font_organizer/__version__.py"
+version-file = "src/twat_video/__version__.py"
 
 
 
@@ -93,13 +91,13 @@ dependencies = [
 # Ensure uv is used for running tools if they are managed by hatch's environment
 # Or explicitly use 'uv run' for tools that might not be directly on PATH from hatch env
 test = "uv run pytest {args:tests}"
-test-cov = "uv run pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/font_organizer --cov=tests {args:tests}"
-type-check = "uv run mypy src/font_organizer tests"
+test-cov = "uv run pytest --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_video --cov=tests {args:tests}"
+type-check = "uv run mypy src/twat_video tests"
 # For linting, ruff is typically installed into the environment by Hatch.
 # If Hatch places binaries in a way that `uv run` is beneficial, use it. Otherwise, direct call is fine.
 # Assuming direct call is fine after Hatch setup for these.
-lint = ["uv run ruff check src/font_organizer tests", "uv run ruff format --check src/font_organizer tests"]
-format = "uv run ruff format src/font_organizer tests" # Added explicit format script
+lint = ["uv run ruff check src/twat_video tests", "uv run ruff format --check src/twat_video tests"]
+format = "uv run ruff format src/twat_video tests" # Added explicit format script
 # Script to install/update tools using uv
 tools-install = "uv pip install --upgrade pytest pytest-cov mypy ruff"
 
@@ -118,7 +116,7 @@ dependencies = [
 
 
 [tool.hatch.envs.lint.scripts]
-typing = "uv run mypy --install-types --non-interactive {args:src/font_organizer tests}"
+typing = "uv run mypy --install-types --non-interactive {args:src/twat_video tests}"
 style = ["uv run ruff check {args:.}", "uv run ruff format --check {args:.}"] # Added --check
 fmt = ["uv run ruff format {args:.}", "uv run ruff check --fix {args:.}"]
 all = ["style", "typing"]
@@ -127,7 +125,7 @@ tools-install-lint = "uv pip install --upgrade mypy ruff"
 
 
 [tool.ruff]
-target-version = "py312"
+target-version = "py310"
 line-length = 88
 lint.extend-select = [
     "A",
@@ -163,7 +161,7 @@ lint.ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["font_organizer"]
+known-first-party = ["twat_video"]
 
 [tool.ruff.lint.flake8-tidy-imports]
 ban-relative-imports = "all"
@@ -177,7 +175,7 @@ ban-relative-imports = "all"
 
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.10"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -192,17 +190,17 @@ warn_unreachable = true
 
 
 [tool.coverage.run]
-source_pkgs = ["font_organizer", "tests"]
+source_pkgs = ["twat_video", "tests"]
 branch = true
 parallel = true
 omit = [
-    "src/font_organizer/__about__.py",
+    "src/twat_video/__about__.py",
 ]
 
 
 [tool.coverage.paths]
-font_organizer = ["src/font_organizer", "*/font-organizer/src/font_organizer"]
-tests = ["tests", "*/font-organizer/tests"]
+twat_video = ["src/twat_video", "*/twat-video/src/twat_video"]
+tests = ["tests", "*/twat-video/tests"]
 
 
 [tool.coverage.report]
@@ -253,7 +251,7 @@ dependencies = [".[test]"]
 [tool.hatch.envs.test.scripts]
 # Use uv run for consistency, though python -m pytest is also fine as pytest is a dependency.
 test = "uv run pytest -n auto {args:tests}"
-test-cov = "uv run pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/font_organizer --cov=tests {args:tests}"
+test-cov = "uv run pytest -n auto --cov-report=term-missing --cov-config=pyproject.toml --cov=src/twat_video --cov=tests {args:tests}"
 bench = "uv run pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only {args}"
 bench-save = "uv run pytest -v -p no:briefcase tests/test_benchmark.py --benchmark-only --benchmark-json=benchmark/results.json {args}"
 
