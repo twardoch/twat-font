@@ -1,11 +1,6 @@
 """twat-font: Font organization and management."""
 
-from importlib.metadata import PackageNotFoundError, version
-
-try:
-    __version__ = version("twat-font")
-except PackageNotFoundError:
-    __version__ = "0.0.0-dev"
+from .__version__ import __version__  # noqa: F401
 
 from twat_font.font_organizer import Config as LegacyConfig, main as _legacy_main, process_data
 from twat_font.core import (
