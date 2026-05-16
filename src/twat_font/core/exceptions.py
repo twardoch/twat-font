@@ -9,8 +9,6 @@ This module defines all custom exceptions used throughout the application.
 class FontOrganizerError(Exception):
     """Base exception for all font organizer errors."""
 
-    pass
-
 
 class FontNotFoundError(FontOrganizerError):
     """Raised when a font file cannot be found."""
@@ -46,8 +44,6 @@ class DuplicateFileError(FontOrganizerError):
 
 class OrganizationError(FontOrganizerError):
     """Raised when font organization fails."""
-
-    pass
 
 
 class SubsetError(FontOrganizerError):

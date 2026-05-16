@@ -18,18 +18,18 @@ from .font_manager import FontManager
 __all__ = [
     # Configuration
     "Config",
-    "load_config",
-    "save_config",
-    # Exceptions
-    "FontOrganizerError",
-    "FontNotFoundError",
-    "FontParseError",
-    "InvalidConfigError",
     # Font information
     "FontInfo",
-    "FontMetadata",
-    "FontStyle",
-    "FontWeight",
     # Manager
     "FontManager",
+    "FontMetadata",
+    "FontNotFoundError",
+    # Exceptions
+    "FontOrganizerError",
+    "FontParseError",
+    "FontStyle",
+    "FontWeight",
+    "InvalidConfigError",
+    "load_config",
+    "save_config",
 ]

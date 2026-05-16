@@ -64,7 +64,14 @@ Issues = "https://github.com/twardoch/twat_font/issues"
 Source = "https://github.com/twardoch/twat_font"
 
 [project.scripts]
-twat-font = "twat_font.cli:main"
+twat-font = "twat_font.__main__:main"
+twat-font-version = "twat_font.__main__:cmd_version"
+twat-font-info = "twat_font.__main__:cmd_info"
+twat-font-convert = "twat_font.__main__:cmd_convert"
+twat-font-subset = "twat_font.__main__:cmd_subset"
+
+[project.entry-points."twat.plugins"]
+font = "twat_font"
 
 
 

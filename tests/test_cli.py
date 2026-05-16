@@ -1,5 +1,10 @@
-"""Test suite for the CLI module."""
 # this_file: tests/test_cli.py
+"""Test suite for the CLI module (both legacy Click CLI and new Fire CLI)."""
+
+from __future__ import annotations
+
+import subprocess
+import sys
 
 import pytest
 from click.testing import CliRunner
@@ -9,8 +14,13 @@ from twat_font.cli import cli
 from twat_font import __version__
 
 
+# ---------------------------------------------------------------------------
+# Legacy Click-based CLI tests (unchanged)
+# ---------------------------------------------------------------------------
+
+
 class TestCLI:
-    """Test cases for the CLI interface."""
+    """Test cases for the Click CLI interface."""
 
     def setup_method(self):
         """Set up test fixtures."""
@@ -168,3 +178,53 @@ class TestCLI:
         # Test with verbose flag
         result = self.runner.invoke(cli, ["--verbose", "version"])
         assert result.exit_code == 0
+
+
+# ---------------------------------------------------------------------------
+# New Fire-based CLI tests (via python -m twat_font)
+# ---------------------------------------------------------------------------
+
+
+def _run_fire(*args: str) -> subprocess.CompletedProcess:
+    return subprocess.run(
+        [sys.executable, "-m", "twat_font", *args],
+        capture_output=True,
+        text=True,
+    )
+
+
+def test_fire_help_exits_zero():
+    """twat-font --help should exit 0 and print help text."""
+    result = _run_fire("--help")
+    assert result.returncode == 0, result.stderr
+    help_text = result.stdout + result.stderr
+    assert help_text, "Expected help text on stdout or stderr"
+    assert "twat-font" in help_text or "COMMAND" in help_text
+
+
+def test_fire_version_subcommand():
+    """twat-font version should print a semver string."""
+    result = _run_fire("version")
+    assert result.returncode == 0, result.stderr
+    out = result.stdout.strip()
+    assert out, "Expected version string"
+    parts = out.split(".")
+    assert len(parts) >= 2, f"Unexpected version format: {out!r}"
+
+
+def test_fire_info_help():
+    """twat-font info --help should exit 0."""
+    result = _run_fire("info", "--help")
+    assert result.returncode == 0, result.stderr
+
+
+def test_fire_convert_help():
+    """twat-font convert --help should exit 0."""
+    result = _run_fire("convert", "--help")
+    assert result.returncode == 0, result.stderr
+
+
+def test_fire_subset_help():
+    """twat-font subset --help should exit 0."""
+    result = _run_fire("subset", "--help")
+    assert result.returncode == 0, result.stderr

@@ -71,22 +71,23 @@ class Config:
         # Validate organize scheme
         valid_schemes = ["family", "style", "weight", "format", "custom"]
         if self.organize.default_scheme not in valid_schemes:
-            raise InvalidConfigError(
+            msg = (
                 f"Invalid organization scheme: {self.organize.default_scheme}. "
                 f"Must be one of: {', '.join(valid_schemes)}"
             )
+            raise InvalidConfigError(msg)
 
         # Validate font extensions
         for ext in self.scan.font_extensions:
             if not ext.startswith("."):
-                raise InvalidConfigError(f"Font extension must start with '.': {ext}")
+                msg = f"Font extension must start with '.': {ext}"
+                raise InvalidConfigError(msg)
 
         # Validate subset format
         valid_formats = ["ttf", "otf", "woff", "woff2"]
         if self.subset.default_format not in valid_formats:
-            raise InvalidConfigError(
-                f"Invalid subset format: {self.subset.default_format}. Must be one of: {', '.join(valid_formats)}"
-            )
+            msg = f"Invalid subset format: {self.subset.default_format}. Must be one of: {', '.join(valid_formats)}"
+            raise InvalidConfigError(msg)
 
     def to_dict(self) -> dict[str, Any]:
         """Convert configuration to dictionary."""
@@ -174,7 +175,8 @@ def load_config(path: str | Path | None = None) -> Config:
             elif path.suffix == ".json":
                 data = json.load(f)
             else:
-                raise InvalidConfigError(f"Unsupported config format: {path.suffix}")
+                msg = f"Unsupported config format: {path.suffix}"
+                raise InvalidConfigError(msg)
 
         config = Config.from_dict(data)
         config.validate()
@@ -182,9 +184,11 @@ def load_config(path: str | Path | None = None) -> Config:
         return config
 
     except (yaml.YAMLError, json.JSONDecodeError) as e:
-        raise InvalidConfigError(f"Failed to parse config file: {e}")
+        msg = f"Failed to parse config file: {e}"
+        raise InvalidConfigError(msg)
     except Exception as e:
-        raise InvalidConfigError(f"Failed to load config: {e}")
+        msg = f"Failed to load config: {e}"
+        raise InvalidConfigError(msg)
 
 
 def save_config(config: Config, path: str | Path | None = None) -> None:
@@ -218,9 +222,11 @@ def save_config(config: Config, path: str | Path | None = None) -> None:
             elif path.suffix == ".json":
                 json.dump(data, f, indent=2)
             else:
-                raise InvalidConfigError(f"Unsupported config format: {path.suffix}")
+                msg = f"Unsupported config format: {path.suffix}"
+                raise InvalidConfigError(msg)
 
         logger.debug(f"Saved configuration to {path}")
 
     except Exception as e:
-        raise InvalidConfigError(f"Failed to save config: {e}")
+        msg = f"Failed to save config: {e}"
+        raise InvalidConfigError(msg)

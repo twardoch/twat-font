@@ -332,7 +332,8 @@ class FontInfo:
         """
         if isinstance(char, str):
             if len(char) != 1:
-                raise ValueError("Only single characters are supported")
+                msg = "Only single characters are supported"
+                raise ValueError(msg)
             char = ord(char)
 
         return char in self.characters

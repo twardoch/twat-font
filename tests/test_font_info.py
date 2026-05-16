@@ -62,14 +62,14 @@ class TestFontInfo:
 
         mock_name_table = Mock()
         mock_name_table.names = [mock_name_record]
-        mock_font.__getitem__.side_effect = lambda key: {
+        mock_font.__getitem__.side_effect = {
             "name": mock_name_table,
             "OS/2": Mock(usWeightClass=400),
             "head": Mock(unitsPerEm=1000),
             "hhea": Mock(ascent=800, descent=-200, lineGap=100),
             "maxp": Mock(numGlyphs=256),
             "cmap": Mock(getBestCmap=lambda: {65: "A", 66: "B", 67: "C"}),
-        }.get(key)
+        }.get
 
         mock_font.__contains__.side_effect = lambda key: key in ["name", "OS/2", "head", "hhea", "maxp", "cmap"]
 
