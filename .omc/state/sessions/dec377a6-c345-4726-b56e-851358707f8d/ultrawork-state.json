@@ -1,0 +1,11 @@
+{
+  "active": true,
+  "started_at": "2026-06-29T02:41:46.720Z",
+  "original_prompt": "/oh-my-claudecode:ultrawork /ultragoal continue @REPOS.md",
+  "session_id": "dec377a6-c345-4726-b56e-851358707f8d",
+  "project_path": "/Users/adam/Developer/vcs3/github.twardoch/pub/twat/plugins/repos/twat_font",
+  "reinforcement_count": 0,
+  "awaiting_confirmation": true,
+  "awaiting_confirmation_set_at": "2026-06-29T02:41:46.720Z",
+  "last_checked_at": "2026-06-29T02:41:46.720Z"
+}

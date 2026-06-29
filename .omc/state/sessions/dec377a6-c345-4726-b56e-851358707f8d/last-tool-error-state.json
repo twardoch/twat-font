@@ -1,0 +1,7 @@
+{
+  "tool_name": "Bash",
+  "tool_input_preview": "{\"command\":\"rtk grep -n \\\"system_fonts\\\\|scan_system\\\\|list_fonts\\\\|font_dirs\\\\|get_system\\\" /Users/adam/Developer/vcs3/github.twardoch/pub/twat/plugins/repos/twat_font/tests/test_font_info.py\",\"descr...",
+  "error": "Exit code 1\n0 matches for 'system_fonts\\|scan_system\\|list_fonts\\|font_dirs\\|get_system'",
+  "timestamp": "2026-06-29T02:50:34.544Z",
+  "retry_count": 2
+}

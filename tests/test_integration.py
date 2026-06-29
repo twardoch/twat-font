@@ -136,7 +136,7 @@ class TestIntegration:
 
     def test_comprehensive_workflow(self):
         """Test a comprehensive workflow using the package."""
-        from twat_font import Config, process_data
+        from twat_font import LegacyConfig as Config, process_data
 
         # Create configuration
         config = Config(name="integration_test", value=42, options={"test": True})
@@ -191,7 +191,7 @@ class TestIntegration:
 
     def test_memory_usage(self):
         """Test basic memory usage patterns."""
-        from twat_font import Config, process_data
+        from twat_font import LegacyConfig as Config, process_data
 
         # Create multiple configs and process data
         configs = [Config(name=f"config_{i}") for i in range(100)]
@@ -204,7 +204,7 @@ class TestIntegration:
     def test_concurrent_usage(self):
         """Test concurrent usage patterns."""
         import threading
-        from twat_font import Config, process_data
+        from twat_font import LegacyConfig as Config, process_data
 
         results = []
 
@@ -233,7 +233,7 @@ class TestIntegration:
 
     def test_large_data_processing(self):
         """Test processing large amounts of data."""
-        from twat_font import Config, process_data
+        from twat_font import LegacyConfig as Config, process_data
 
         # Create large dataset
         large_data = list(range(10000))

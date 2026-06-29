@@ -5,7 +5,7 @@ import logging
 import pytest
 from unittest.mock import patch
 
-from twat_font import Config, process_data, main as twat_font_main
+from twat_font import LegacyConfig as Config, process_data, main as twat_font_main
 from twat_font import __version__
 
 

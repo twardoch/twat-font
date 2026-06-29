@@ -60,23 +60,15 @@ class TestFontManager:
     @patch("twat_font.core.font_manager.Path.glob")
     @patch("twat_font.core.font_manager.Path.exists")
     @patch("twat_font.core.font_manager.Path.is_dir")
-    def test_scan_directory(self, mock_is_dir, mock_exists, mock_glob, manager):
+    @patch("twat_font.core.font_manager.Path.is_file")
+    def test_scan_directory(self, mock_is_file, mock_is_dir, mock_exists, mock_glob, manager):
         """Test directory scanning."""
         mock_exists.return_value = True
         mock_is_dir.return_value = True
+        mock_is_file.return_value = True
 
-        # Mock font files
-        mock_files = [
-            Mock(is_file=lambda: True, match=lambda p: False),
-            Mock(is_file=lambda: True, match=lambda p: False),
-        ]
-        for i, f in enumerate(mock_files):
-            f.__str__ = lambda i=i: f"font{i}.ttf"
-            f.__lt__ = lambda self, other: str(self) < str(other)
-            f.__gt__ = lambda self, other: str(self) > str(other)
-            f.__eq__ = lambda self, other: str(self) == str(other)
-            f.__hash__ = lambda self: hash(str(self))
-
+        # Use real Path objects so set() and sorted() work correctly
+        mock_files = [Path(f"/test/font{i}.ttf") for i in range(2)]
         mock_glob.return_value = mock_files
 
         fonts = manager.scan_directory("/test/dir")
@@ -144,11 +136,12 @@ class TestFontManager:
     def test_get_system_font_dirs_linux(self, manager):
         """Test getting system font directories on Linux."""
         with patch("platform.system", return_value="Linux"):
-            dirs = manager.get_system_font_dirs()
+            with patch("twat_font.core.font_manager.Path.exists", return_value=True):
+                dirs = manager.get_system_font_dirs()
 
-            # Should include standard Linux font directories
-            dir_paths = [str(d) for d in dirs]
-            assert any("/usr/share/fonts" in p for p in dir_paths)
+                # Should include standard Linux font directories
+                dir_paths = [str(d) for d in dirs]
+                assert any("/usr/share/fonts" in p for p in dir_paths)
 
     def test_get_system_font_dirs_macos(self, manager):
         """Test getting system font directories on macOS."""
@@ -163,8 +156,9 @@ class TestFontManager:
         """Test getting system font directories on Windows."""
         with patch("platform.system", return_value="Windows"):
             with patch.dict("os.environ", {"WINDIR": "C:\\Windows"}):
-                dirs = manager.get_system_font_dirs()
+                with patch("twat_font.core.font_manager.Path.exists", return_value=True):
+                    dirs = manager.get_system_font_dirs()
 
-                # Should include Windows font directory
-                dir_paths = [str(d) for d in dirs]
-                assert any("Fonts" in p for p in dir_paths)
+                    # Should include Windows font directory
+                    dir_paths = [str(d) for d in dirs]
+                    assert any("Fonts" in p for p in dir_paths)

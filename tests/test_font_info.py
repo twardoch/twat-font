@@ -75,24 +75,21 @@ class TestFontInfo:
 
         return mock_font
 
+    @patch("twat_font.core.font_info.FontInfo._calculate_file_hash", return_value="deadbeef00")
     @patch("twat_font.core.font_info.TTFont")
     @patch("twat_font.core.font_info.Path.exists")
     @patch("twat_font.core.font_info.Path.stat")
-    def test_font_info_creation(self, mock_stat, mock_exists, mock_ttfont_class, mock_ttfont):
+    def test_font_info_creation(self, mock_stat, mock_exists, mock_ttfont_class, _mock_hash, mock_ttfont):
         """Test creating FontInfo instance."""
         mock_exists.return_value = True
         mock_stat.return_value = Mock(st_size=12345)
         mock_ttfont_class.return_value = mock_ttfont
 
-        # Mock file operations
-        with patch("builtins.open", create=True) as mock_open:
-            mock_open.return_value.__enter__.return_value.read.return_value = b"test"
+        font_info = FontInfo("test.ttf")
 
-            font_info = FontInfo("test.ttf")
-
-            assert font_info.path == Path("test.ttf")
-            assert font_info.family == "Test Font"
-            assert font_info.metadata.file_size == 12345
+        assert font_info.path == Path("test.ttf")
+        assert font_info.family == "Test Font"
+        assert font_info.metadata.file_size == 12345
 
     def test_font_not_found(self):
         """Test FontNotFoundError when file doesn't exist."""
@@ -113,31 +110,30 @@ class TestFontInfo:
         assert "Failed to parse font" in str(exc_info.value)
         assert "Invalid font" in str(exc_info.value)
 
+    @patch("twat_font.core.font_info.FontInfo._calculate_file_hash", return_value="deadbeef00")
     @patch("twat_font.core.font_info.TTFont")
     @patch("twat_font.core.font_info.Path.exists")
     @patch("twat_font.core.font_info.Path.stat")
-    def test_metadata_extraction(self, mock_stat, mock_exists, mock_ttfont_class, mock_ttfont):
+    def test_metadata_extraction(self, mock_stat, mock_exists, mock_ttfont_class, _mock_hash, mock_ttfont):
         """Test metadata extraction from font."""
         mock_exists.return_value = True
         mock_stat.return_value = Mock(st_size=12345)
         mock_ttfont_class.return_value = mock_ttfont
 
-        with patch("builtins.open", create=True) as mock_open:
-            mock_open.return_value.__enter__.return_value.read.return_value = b"test"
+        font_info = FontInfo("test.ttf")
+        metadata = font_info.metadata
 
-            font_info = FontInfo("test.ttf")
-            metadata = font_info.metadata
+        assert metadata.family == "Test Font"
+        assert metadata.file_size == 12345
+        assert metadata.format == "TTF"
+        assert metadata.glyph_count == 256
+        assert metadata.weight == FontWeight.REGULAR
 
-            assert metadata.family == "Test Font"
-            assert metadata.file_size == 12345
-            assert metadata.format == "TTF"
-            assert metadata.glyph_count == 256
-            assert metadata.weight == FontWeight.REGULAR
-
+    @patch("twat_font.core.font_info.FontInfo._calculate_file_hash", return_value="deadbeef00")
     @patch("twat_font.core.font_info.TTFont")
     @patch("twat_font.core.font_info.Path.exists")
     @patch("twat_font.core.font_info.Path.stat")
-    def test_character_coverage(self, mock_stat, mock_exists, mock_ttfont_class, mock_ttfont):
+    def test_character_coverage(self, mock_stat, mock_exists, mock_ttfont_class, _mock_hash, mock_ttfont):
         """Test character coverage functionality."""
         mock_exists.return_value = True
         mock_stat.return_value = Mock(st_size=12345)

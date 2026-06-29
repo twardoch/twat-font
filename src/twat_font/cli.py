@@ -14,7 +14,7 @@ from typing import Any
 
 import click
 
-from . import __version__, Config, process_data, main as lib_main
+from . import __version__, LegacyConfig as Config, process_data, main as lib_main
 
 
 # Configure logging for CLI
